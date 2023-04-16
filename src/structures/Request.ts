@@ -1,4 +1,5 @@
 import fetch from "cross-fetch";
+import { AutoModerationActionObject } from "../typings";
 interface RequestOptions {
   method: "GET" | "POST" | "PATCH" | "DELETE" | "PUT";
   endpoint: string;
