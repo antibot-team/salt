@@ -112,12 +112,13 @@ export class AutoModeration implements Readonly<AutoModerationRuleObject> {
   }
 
   public async getAutoModRule(
-    guildID: Snowflake
+    guildID: Snowflake,
+    opts: { id: string }
   ): Promise<AutoModerationRuleObject | unknown> {
     return await this.reqeust.req(
       {
         method: "GET",
-        endpoint: `/guilds/${guildID}/auto-moderation/rules/${this.id}`,
+        endpoint: `/guilds/${guildID}/auto-moderation/rules/${opts.id}`,
       },
       ApplicationType.JSON
     );
