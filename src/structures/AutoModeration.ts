@@ -122,7 +122,10 @@ export class AutoModeration implements Readonly<AutoModerationRuleObject> {
     );
   }
 
-  public async createAutoModRule(guildID: Snowflake, opts: IcreateAutomodRule) {
+  public async createAutoModRule(
+    guildID: Snowflake,
+    opts: IcreateAutomodRule
+  ): Promise<AutoModerationRuleObject | unknown> {
     if (opts.exempt_roles.length < 20) {
       throw new ReferenceError(
         "@antibot/salt#createAutoModRule 'exempt_roles' array can't overcome 20"
