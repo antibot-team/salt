@@ -4,14 +4,15 @@ import {
   EventType,
   Snowflake,
   TriggerType,
-  TriggetMetaData,
-} from "../../typings";
+  TriggerMetaData,
+} from "../typings";
 import { ApplicationType, Request } from "./Request";
 
 export interface IcreateAutomodRule {
   name: string;
   event_type: number;
-  trigger_metadata?: TriggetMetaData;
+  trigger_type: TriggerType;
+  trigger_metadata?: TriggerMetaData;
   actions: AutoModerationActionObject[] | [];
   enabled?: boolean;
   exempt_roles?: Snowflake[] | [];
@@ -24,69 +25,69 @@ export class AutoModeration implements Readonly<AutoModerationRuleObject> {
    * the id of this rule
    * @returns snowflake
    */
-  id: Snowflake = "";
+  public id: Snowflake = "";
   /**
    * guilded_id
    * the id of the guild which this rule belongs to
    * @returns snowflake
    */
-  guilded_id: Snowflake = "";
+  public guilded_id: Snowflake = "";
   /**
    * name
    * the rule name
    * @returns string
    */
-  name: string = "";
+  public name: string = "";
   /**
    * creator_id
    * the user which first created this rule
    * @returns snowflake
    */
-  creator_id: Snowflake = "";
+  public creator_id: Snowflake = "";
   /**
    * event_type
    * the rule event type
    * @returns EventType
    */
-  event_type: EventType = 1;
+  public event_type: EventType = 1;
   /**
    * trigger_type
    * the rule trigger type
    * @returns TriggerType
    */
-  trigger_type: TriggerType = 1;
+  public trigger_type: TriggerType = 1;
   /**
    * trigger_metadata
    * the rule trigger metadata
    * @returns integer
    */
-  trigger_metadata: TriggetMetaData;
+  public trigger_metadata: TriggerMetaData;
   /**
    * actions
    * the actions which will execute when the rule is triggered
    * @returns array
    */
-  actions: AutoModerationActionObject[] = [];
+  public actions: AutoModerationActionObject[] = [];
   /**
    * enabled
    * whether the rule is enabled
    * @returns boolean
    */
-  enabled: boolean = false;
+  public enabled: boolean = false;
   /**
    * exempt_roles
    * the role ids that should not be affected by the rule (Maximum of 20)
    * @returns array
    */
-  exempt_roles: Snowflake[] = [];
+  public exempt_roles: Snowflake[] = [];
   /**
    * exempt_channels
    * the channel ids that should not be affected by the rule (Maximum of 50)
    * @returns array
    */
-  exempt_channels: Snowflake[] = [];
-  constructor(data: AutoModerationRuleObject, request: Request) {
-    this.reqeust = request;
+  public exempt_channels: Snowflake[] = [];
+  constructor(token: string, data?: AutoModerationRuleObject) {
+    this.reqeust = new Request(token);
     this.id = data.id;
     this.guilded_id = data.guilded_id;
     this.name = data.name;
@@ -126,14 +127,34 @@ export class AutoModeration implements Readonly<AutoModerationRuleObject> {
     guildID: Snowflake,
     opts: IcreateAutomodRule
   ): Promise<AutoModerationRuleObject | unknown> {
-    if (opts.exempt_roles.length < 20) {
-      throw new ReferenceError(
-        "@antibot/salt#createAutoModRule 'exempt_roles' array can't overcome 20"
-      );
-    } else if (opts.exempt_channels.length < 50) {
-      throw new ReferenceError(
-        "@antibot/salt#createAutoModRule 'exempt_channels' array can't overcome 50"
-      );
+    if (opts.exempt_roles || opts.exempt_channels) {
+      if (opts.exempt_roles.length > 20) {
+        throw new ReferenceError(
+          "@antibot/salt#createAutoModRule 'exempt_roles' array can't overcome 20"
+        );
+      } else if (opts.exempt_channels.length > 50) {
+        throw new ReferenceError(
+          "@antibot/salt#createAutoModRule 'exempt_channels' array can't overcome 50"
+        );
+      } else {
+        return await this.reqeust.req(
+          {
+            method: "POST",
+            endpoint: `/guilds/${guildID}/auto-moderation/rules`,
+            data: {
+              name: opts.name || this.name,
+              event_type: opts.event_type || this.event_type,
+              trigger_type: opts.trigger_type || this.trigger_type,
+              trigger_metadata: opts.trigger_metadata || this.trigger_metadata,
+              actions: opts.actions || this.actions,
+              enabled: opts.enabled || this.enabled,
+              exempt_roles: opts.exempt_roles || this.exempt_roles,
+              exempt_channels: opts.exempt_channels || this.exempt_channels,
+            },
+          },
+          ApplicationType.JSON
+        );
+      }
     } else {
       return await this.reqeust.req(
         {

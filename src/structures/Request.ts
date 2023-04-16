@@ -100,7 +100,7 @@ export class Request {
   private token: string;
   constructor(token: string) {
     this.token = token;
-    this.api = "";
+    this.api = "https://discord.com/api/v10";
   }
   public async req(
     opts: RequestOptions,
@@ -136,7 +136,6 @@ export class Request {
           })
           .catch(() => {
             resolve(null);
-            console.log(x);
           });
       });
     });

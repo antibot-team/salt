@@ -91,7 +91,7 @@ export enum ActionType {
    */
   TIMEOUT = 3,
 }
-export interface TriggetMetaData {
+export interface TriggerMetaData {
   /**
    * keyword_filter
    * substrings which will be searched for in content (Maximum of 1000)
@@ -199,7 +199,7 @@ export interface AutoModerationRuleObject {
    * the rule trigger metadata
    * @returns integer
    */
-  trigger_metadata: TriggetMetaData;
+  trigger_metadata: TriggerMetaData;
   /**
    * actions
    * the actions which will execute when the rule is triggered

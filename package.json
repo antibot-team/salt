@@ -1,12 +1,19 @@
 {
   "name": "@antibot/salt",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/index.js",
   "author": "J_DDev <69683068+JayyDoesDev@users.noreply.github.com>",
   "license": "MIT",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "node __tests__/index.js",
+    "prepublishOnly": "yarn build"
+  },
   "dependencies": {
     "cross-fetch": "^3.1.5",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "util": "^0.12.5"
   }
 }
