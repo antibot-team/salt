@@ -114,7 +114,7 @@ export class Request {
       | VideoType
       | VNDType
       | X_Audit_Log_Reason
-  ) {
+  ): Promise<AutoModerationActionObject> {
     const request: Object = {
       method: opts.method,
       headers: {
