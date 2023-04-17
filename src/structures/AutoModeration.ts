@@ -150,7 +150,7 @@ export class AutoModeration implements Readonly<AutoModerationRuleObject> {
         );
       } else if (opts.exempt_channels.length > 50) {
         throw new ReferenceError(
-          "@antibot/salt#createAutoModRule 'exempt_channels' array can't overcome 50"
+          `@antibot/salt#${arguments.callee.name} 'exempt_channels' array can't overcome 50`
         );
       } else {
         return await this.reqeust.req(
