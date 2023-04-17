@@ -4,7 +4,7 @@
     "name": "@antibot/salt",
     "readme": "./README.md",
     "theme": "default",
-    "entryPoints": ["typings/index.d.ts"],
+    "entryPoints": ["src/index.ts"],
     "excludeExternals": false,
     "excludePrivate": false,
     "excludeInternal": false
