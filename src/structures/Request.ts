@@ -1,5 +1,5 @@
 import fetch from "cross-fetch";
-import { AutoModerationActionObject } from "../typings";
+import { AutoModerationActionObject, IError } from "../typings";
 interface RequestOptions {
   method: "GET" | "POST" | "PATCH" | "DELETE" | "PUT";
   endpoint: string;
@@ -114,7 +114,7 @@ export class Request {
       | VideoType
       | VNDType
       | X_Audit_Log_Reason
-  ): Promise<AutoModerationActionObject> {
+  ): Promise<AutoModerationActionObject | IError> {
     const request: Object = {
       method: opts.method,
       headers: {

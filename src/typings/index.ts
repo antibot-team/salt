@@ -91,6 +91,31 @@ export enum ActionType {
    */
   TIMEOUT = 3,
 }
+export interface IErrorRequest {
+  code: string;
+  message: string;
+}
+export interface IErrorUtil {
+  activities?: {
+    "0": {
+      platform: {
+        _errors: IErrorRequest[];
+      };
+      type: {
+        _errors: IErrorRequest[];
+      };
+    };
+  };
+  access_token?: {
+    _errors: IErrorRequest[];
+  };
+  _errors: IErrorRequest[];
+}
+export interface IError {
+  code: number;
+  errors: IErrorUtil;
+  message: string;
+}
 export interface TriggerMetaData {
   /**
    * keyword_filter

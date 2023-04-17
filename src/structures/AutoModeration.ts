@@ -5,10 +5,23 @@ import {
   Snowflake,
   TriggerType,
   TriggerMetaData,
+  IError,
 } from "../typings";
 import { ApplicationType, Request } from "./Request";
 
-export interface IcreateAutomodRule {
+export interface IcreateAutoModRule {
+  name: string;
+  event_type: number;
+  trigger_type: TriggerType;
+  trigger_metadata?: TriggerMetaData;
+  actions: AutoModerationActionObject[] | [];
+  enabled?: boolean;
+  exempt_roles?: Snowflake[] | [];
+  exempt_channels?: Snowflake[] | [];
+}
+
+export interface IeditAutoModRule {
+  id: Snowflake;
   name: string;
   event_type: number;
   trigger_type: TriggerType;
@@ -19,7 +32,7 @@ export interface IcreateAutomodRule {
   exempt_channels?: Snowflake[] | [];
 }
 export class AutoModeration implements Readonly<AutoModerationRuleObject> {
-  private reqeust: Request;
+  protected reqeust: Request;
   /**
    * id
    * the id of this rule
@@ -101,7 +114,9 @@ export class AutoModeration implements Readonly<AutoModerationRuleObject> {
     this.exempt_channels = data.exempt_channels;
   }
 
-  public async getRules(guildID: Snowflake) {
+  public async getRules(
+    guildID: Snowflake
+  ): Promise<AutoModerationRuleObject | IError | unknown> {
     return await this.reqeust.req(
       {
         method: "GET",
@@ -114,7 +129,7 @@ export class AutoModeration implements Readonly<AutoModerationRuleObject> {
   public async getAutoModRule(
     guildID: Snowflake,
     opts: { id: string }
-  ): Promise<AutoModerationRuleObject | unknown> {
+  ): Promise<AutoModerationRuleObject | IError | unknown> {
     return await this.reqeust.req(
       {
         method: "GET",
@@ -126,12 +141,12 @@ export class AutoModeration implements Readonly<AutoModerationRuleObject> {
 
   public async createAutoModRule(
     guildID: Snowflake,
-    opts: IcreateAutomodRule
-  ): Promise<AutoModerationRuleObject | unknown> {
+    opts: IcreateAutoModRule
+  ): Promise<AutoModerationRuleObject | IError | unknown> {
     if (opts.exempt_roles || opts.exempt_channels) {
       if (opts.exempt_roles.length > 20) {
         throw new ReferenceError(
-          "@antibot/salt#createAutoModRule 'exempt_roles' array can't overcome 20"
+          `@antibot/salt#${arguments.callee.name} 'exempt_roles' array can't overcome 20`
         );
       } else if (opts.exempt_channels.length > 50) {
         throw new ReferenceError(
@@ -174,5 +189,52 @@ export class AutoModeration implements Readonly<AutoModerationRuleObject> {
         ApplicationType.JSON
       );
     }
+  }
+
+  public async editAutoModRule(
+    guildID: Snowflake,
+    opts: IeditAutoModRule
+  ): Promise<AutoModerationRuleObject | IError | unknown> {
+    if (opts.exempt_roles || opts.exempt_channels) {
+      if (opts.exempt_roles.length > 20) {
+        throw new ReferenceError(
+          `@antibot/salt#${arguments.callee.name} 'exempt_roles' array can't overcome 20`
+        );
+      } else if (opts.exempt_channels.length > 50) {
+        throw new ReferenceError(
+          `@antibot/salt#${arguments.callee.name} 'exempt_channels' array can't overcome 50`
+        );
+      } else {
+        return await this.reqeust.req(
+          {
+            method: "PATCH",
+            endpoint: `/guilds/${guildID}/auto-moderation/rules/${opts.id}`,
+            data: {
+              name: opts.name || this.name,
+              event_type: opts.event_type || this.event_type,
+              trigger_metadata: opts.trigger_metadata || this.trigger_metadata,
+              actions: opts.actions || this.actions,
+              enabled: opts.enabled || this.enabled,
+              exempt_roles: opts.exempt_roles || this.exempt_roles,
+              exempt_channels: opts.exempt_channels || this.exempt_channels,
+            },
+          },
+          ApplicationType.JSON
+        );
+      }
+    }
+  }
+
+  public async deleteAutoModRule(
+    guildID: Snowflake,
+    opts: { id: string }
+  ): Promise<IError | unknown> {
+    return await this.reqeust.req(
+      {
+        method: "DELETE",
+        endpoint: `/guilds/${guildID}/auto-moderation/rules/${opts.id}`,
+      },
+      ApplicationType.JSON
+    );
   }
 }
