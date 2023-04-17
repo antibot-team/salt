@@ -1,0 +1,11 @@
+
+{
+    "out": "./docs",
+    "name": "@antibot/salt",
+    "readme": "./README.md",
+    "theme": "default",
+    "entryPoints": ["typings/index.d.ts"],
+    "excludeExternals": false,
+    "excludePrivate": false,
+    "excludeInternal": false
+  }
