@@ -38,7 +38,7 @@ export class AutoModeration implements Readonly<AutoModerationRuleObject> {
    * the id of this rule
    * @returns snowflake
    */
-  public id: Snowflake = "";
+  public readonly id: Snowflake = "";
   /**
    * guilded_id
    * the id of the guild which this rule belongs to
