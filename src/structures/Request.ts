@@ -103,7 +103,7 @@ export class Request {
     this.token = token;
     this.api = "https://discord.com/api/v10";
   }
-  public async req(
+  public async req<T>(
     opts: RequestOptions,
     type:
       | ApplicationType
@@ -114,7 +114,7 @@ export class Request {
       | VideoType
       | VNDType
       | X_Audit_Log_Reason
-  ): Promise<AutoModerationActionObject | IError> {
+  ): Promise<T | IError> {
     const request: Object = {
       method: opts.method,
       headers: {

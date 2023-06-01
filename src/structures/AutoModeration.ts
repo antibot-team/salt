@@ -114,9 +114,9 @@ export class AutoModeration implements Readonly<AutoModerationRuleObject> {
     this.exempt_channels = data.exempt_channels;
   }
 
-  public async getRules(
+  public async getRules<T>(
     guildID: Snowflake
-  ): Promise<AutoModerationRuleObject | IError | unknown> {
+  ): Promise<T | AutoModerationRuleObject | IError | unknown> {
     return await this.reqeust.req(
       {
         method: "GET",
@@ -126,11 +126,11 @@ export class AutoModeration implements Readonly<AutoModerationRuleObject> {
     );
   }
 
-  public async getAutoModRule(
+  public async getAutoModRule<T>(
     guildID: Snowflake,
     opts: { id: string }
-  ): Promise<AutoModerationRuleObject | IError | unknown> {
-    return await this.reqeust.req(
+  ): Promise<T | AutoModerationRuleObject | IError | unknown> {
+    return await this.reqeust.req<AutoModerationRuleObject>(
       {
         method: "GET",
         endpoint: `/guilds/${guildID}/auto-moderation/rules/${opts.id}`,
@@ -139,10 +139,10 @@ export class AutoModeration implements Readonly<AutoModerationRuleObject> {
     );
   }
 
-  public async createAutoModRule(
+  public async createAutoModRule<T>(
     guildID: Snowflake,
     opts: IcreateAutoModRule
-  ): Promise<AutoModerationRuleObject | IError | unknown> {
+  ): Promise<T | AutoModerationRuleObject | IError | unknown> {
     if (opts.exempt_roles || opts.exempt_channels) {
       if (opts.exempt_roles.length > 20) {
         throw new ReferenceError(
@@ -153,7 +153,7 @@ export class AutoModeration implements Readonly<AutoModerationRuleObject> {
           `@antibot/salt#${arguments.callee.name} 'exempt_channels' array can't overcome 50`
         );
       } else {
-        return await this.reqeust.req(
+        return await this.reqeust.req<AutoModerationRuleObject>(
           {
             method: "POST",
             endpoint: `/guilds/${guildID}/auto-moderation/rules`,
@@ -172,7 +172,7 @@ export class AutoModeration implements Readonly<AutoModerationRuleObject> {
         );
       }
     } else {
-      return await this.reqeust.req(
+      return await this.reqeust.req<AutoModerationRuleObject>(
         {
           method: "POST",
           endpoint: `/guilds/${guildID}/auto-moderation/rules`,
@@ -191,10 +191,10 @@ export class AutoModeration implements Readonly<AutoModerationRuleObject> {
     }
   }
 
-  public async editAutoModRule(
+  public async editAutoModRule<T>(
     guildID: Snowflake,
     opts: IeditAutoModRule
-  ): Promise<AutoModerationRuleObject | IError | unknown> {
+  ): Promise<T | AutoModerationRuleObject | IError | unknown> {
     if (opts.exempt_roles || opts.exempt_channels) {
       if (opts.exempt_roles.length > 20) {
         throw new ReferenceError(
@@ -205,7 +205,7 @@ export class AutoModeration implements Readonly<AutoModerationRuleObject> {
           `@antibot/salt#${arguments.callee.name} 'exempt_channels' array can't overcome 50`
         );
       } else {
-        return await this.reqeust.req(
+        return await this.reqeust.req<AutoModerationRuleObject>(
           {
             method: "PATCH",
             endpoint: `/guilds/${guildID}/auto-moderation/rules/${opts.id}`,
@@ -225,11 +225,11 @@ export class AutoModeration implements Readonly<AutoModerationRuleObject> {
     }
   }
 
-  public async deleteAutoModRule(
+  public async deleteAutoModRule<T>(
     guildID: Snowflake,
     opts: { id: string }
-  ): Promise<IError | unknown> {
-    return await this.reqeust.req(
+  ): Promise<T | IError | unknown> {
+    return await this.reqeust.req<AutoModerationRuleObject>(
       {
         method: "DELETE",
         endpoint: `/guilds/${guildID}/auto-moderation/rules/${opts.id}`,
